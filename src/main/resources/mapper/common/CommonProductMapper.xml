@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.ilooli.common.mapper.CommonProductMapper">
+    <sql id="base_column_map">
+        FGCODEVERSION as material_code,
+        FGCODE as material_model,
+        DESCRIPTION as material_name,
+        FGKIND as material_current,
+        SAPMATERIALCODE as material_note
+    </sql>
+
+    <select id="getByCode" resultType="cc.ilooli.common.pojo.ProductDO">
+        select
+        <include refid="base_column_map"/>
+        from fgcode
+        <where>
+            <if test="code != null and code != ''">and FGCODEVERSION = #{code}</if>
+        </where>
+        limit ${currentPage * pageSize}, #{pageSize}
+    </select>
+
+    <select id="getByInfo" resultType="cc.ilooli.common.pojo.ProductDO">
+        select
+        <include refid="base_column_map"/>
+        from fgcode
+        <where>
+            <if test="model != null and model != ''">and FGCODE = #{model}</if>
+            <if test="current != null and current != ''">and FGKIND = #{current}</if>
+            <if test="note != null and note != ''">and SAPMATERIALCODE = #{note}</if>
+        </where>
+    </select>
+
+    <select id="getAll" resultType="cc.ilooli.common.pojo.ProductDO">
+        select
+        <include refid="base_column_map"/>
+        from fgcode
+        <where>
+            <if test="model != null and model != ''">and FGCODE = #{model}</if>
+            <if test="name != null and name != ''">and DESCRIPTION = #{name}</if>
+            <if test="current != null and current != ''">and FGKIND = #{current}</if>
+            <if test="note != null and note != ''">and SAPMATERIALCODE = #{note}</if>
+        </where>
+        limit ${currentPage * pageSize}, #{pageSize}
+    </select>
+
+
+</mapper>

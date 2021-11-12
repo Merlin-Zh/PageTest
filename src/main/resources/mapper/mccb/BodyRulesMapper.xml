@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.ilooli.mccb.mapper.BodyRulesMapper">
+
+    <sql id="base_columns">
+        id, series, inm, icu, poles, trip, use, alarm, special_use, to_inm, to_icu, to_poles,to_trip, to_use,
+        to_alarm, to_special_use, priority, rule, creator_id, create_time, modifier_id, modified_time
+    </sql>
+
+    <select id="getRulesByDO" resultType="cc.ilooli.mccb.pojo.MccbBodyRulesDO">
+        select
+        <include refid="base_columns"/>
+        from mccb_body_rules
+        <where>
+            <if test="series != null and series != ''">and series = #{series}</if>
+            <if test="inm != null and inm != ''">and inm = #{inm}</if>
+<!--            <if test="!icu.isBlank()">and icu = #{icu}</if>-->
+<!--            <if test="!poles.isBlank()">and poles = #{poles}</if>-->
+<!--            <if test="!trip.isBlank()">and trip = #{trip}</if>-->
+<!--            <if test="!use.isBlank()">and icu = #{use}</if>-->
+<!--            <if test="!specialUse.isBlank()">and special_use = #{specialUse}</if>-->
+<!--            <if test="!priority.isBlank()">and priority = #{priority}</if>-->
+<!--            <if test="!rule.isBlank()">and rule = #{rule}</if>-->
+<!--            <if test="!creatorId.isBlank()">and creator_id = #{creatorId}</if>-->
+<!--            <if test="!modifierId.isBlank()">and modifier_id = #{modifierId}</if>-->
+        </where>
+        limit ${currentPage * pageSize}, #{pageSize}
+    </select>
+</mapper>

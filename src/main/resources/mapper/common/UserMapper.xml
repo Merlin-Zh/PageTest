@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.ilooli.common.mapper.UserMapper">
+    <sql id="base_column">
+        id, username, password, name, dept, status, create_time, modified_time
+    </sql>
+    <insert id="save">
+        insert into user values(null, #{username}, #{password}, #{name}, #{dept}, #{status}, #{create_time}, #{modified_time})
+    </insert>
+
+    <update id="update">
+        update user set (
+        <if test="password != null and password != ''">
+            password = #{password}</if>
+        <if test="name != null and name != ''">name = #{name}</if>
+        <if test="dept != null and dept != ''">dept = #{dept}</if>
+        <if test="status != null and status != ''">status = #{status}</if>
+        <if test="modified_time != null and modified_time != ''">modified_time = #{modified_time}</if>
+        ) where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update user set (
+        <if test="password != null and password != ''">
+            password = #{password}
+        </if>
+        ) where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from user where id = #{id}
+    </delete>
+
+    <select id="getByInfo" resultType="cc.ilooli.common.pojo.UserDO">
+        select <include refid="base_column"/> from user
+        <where>
+            <if test="username != null and username != ''">and username = #{username}</if>
+            <if test="password != null and password != ''">and password = #{password}</if>
+        </where>
+    </select>
+</mapper>

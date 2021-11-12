@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.ilooli.mccb.mapper.MccbAttachMapper">
+    <sql id="outside_attach_column">
+        id, code, model, series, inm, icu, poles, trip, specialUse, attachName, note, amount, creatorId, createTime,
+        modifierId, modifiedTime
+    </sql>
+    <sql id="inside_attach_code_column">
+        id, model, code, attachs, pole_2, pole_3, pole_4, creator_id, create_time, modifier_id, modified_time
+    </sql>
+    <sql id="inside_attach_data_column">
+        id, code, model, name, note, 1 as amount, creator_id, create_time, modifier_id, modified_time
+    </sql>
+    <insert id="saveInsideAttachData" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into mccb_attachs_data
+        values (null, #{code}, #{model}, #{name}, #{note}, #{creatorId}, #{createTime}, #{modifierId}, #{modifiedTime})
+    </insert>
+    <insert id="saveInsideAttachCode">
+        insert into mccb_attachs_code
+        values (null, #{model}, #{code}, #{attachs}, #{pole2}, #{pole3}, #{pole4}, #{creatorId}, #{createTime},
+                #{modifierId}, #{modifiedTime})
+    </insert>
+    <update id="saveOutsideAttach" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into mccb_outside_attachs
+        values (null, #{code}, #{model}, #{series}, #{inm}, #{icu}, #{poles}, #{trip}, #{specialUse},
+                #{attachName}, #{note}, #{amount}, #{creatorId}, #{createTime}, #{modifierId}, #{modifiedTime})
+    </update>
+    <update id="updateOutsideAttach">
+        update mccb_outside_attachs
+        set code        = #{code},
+            model       = #{model},
+            series      = #{series},
+            inm         = #{inm},
+            icu         = #{icu},
+            poles       = #{poles},
+            trip        = #{trip},
+            special_use = #{specialUse},
+            attach_name = #{attachName},
+            note        = #{note},
+            amount      = #{amount}
+        where id = #{id}
+    </update>
+    <update id="updateInsideAttachData">
+        update mccb_attachs_data
+        set code          = #{code},
+            model         = #{model},
+            name          = #{name},
+            note          = #{note},
+            creator_id    = #{creatorId},
+            create_time   = #{createTime},
+            modifier_id   = #{modifierId},
+            modified_time = #{modifiedTime}
+        where id = #{id}
+    </update>
+    <update id="updateInsideAttachCode">
+        update mccb_attachs_code
+        set model         = #{model},
+            code          = #{code},
+            attachs       = #{attachs},
+            pole_2        = #{pole2},
+            pole_3        = #{pole3},
+            pole_4        = #{pole4},
+            creator_id    = #{creatorId},
+            create_time   = #{createTime},
+            modifier_id   = #{modifierId},
+            modified_time = #{modifiedTime}
+        where id = #{id}
+    </update>
+    <delete id="deleteOutsideAttach">
+        delete
+        from mccb_outside_attachs
+        where id = #{id}
+    </delete>
+    <delete id="deleteInsideAttachData">
+        delete
+        from mccb_attachs_data
+        where id = #{id}
+    </delete>
+    <delete id="deleteInsideAttachCode">
+        delete from mccb_attachs_code where id = #{id}
+    </delete>
+    <select id="getByInfo" resultType="java.lang.String">
+        select attachs
+        from mccb_attachs_code
+        where model = #{model}
+          and code = #{code}
+    </select>
+
+    <select id="getInsideAttachByInfo" resultType="cc.ilooli.mccb.pojo.MccbInsideAttachDataDO">
+        select
+        <include refid="inside_attach_data_column"/>
+        from mccb_attachs_data
+        where model = #{model}
+        and name = #{name}
+        and note = #{note}
+    </select>
+
+    <select id="getOutsideAttach" resultType="cc.ilooli.mccb.pojo.MccbOutsideAttachsDO">
+        select
+        <include refid="outside_attach_column"/>
+        from mccb_outside_attachs
+        <where>
+            <if test="series != null and series != ''">and series = #{series}</if>
+            <if test="inm != null and inm != ''">and inm = #{inm}</if>
+            <if test="icu != null and icu != ''">and icu = #{icu}</if>
+            <if test="poles != null and poles != ''">and poles = #{poles}</if>
+            <if test="trip != null and trip != ''">and trip = #{trip}</if>
+            <if test="specialUse != null and specialUse != ''">and special_use = #{specialUse}</if>
+            <if test="attachName != null and attachName != ''">and attach_name = #{attachName}</if>
+            <if test="note != null and note != ''">and note = #{note}</if>
+        </where>
+    </select>
+
+    <select id="getOutsideAttachsList" resultType="cc.ilooli.mccb.pojo.MccbOutsideAttachsDO">
+        select
+        <include refid="outside_attach_column"/>
+        from mccb_outside_attachs a left join user u on a.creator_id = u.id
+        <where>
+            <if test="model != null and model != ''">and a.model = #{model}</if>
+            <if test="name != null and name != ''">and a.name = #{name}</if>
+            <if test="note != null and note != ''">and a.note = #{note}</if>
+            <if test="creator != null and creator != ''">and b.name = #{creator}</if>
+            <if test="modifier != null and modifier != ''">and b.name = #{modifier}</if>
+        </where>
+        limit ${currentPage * pageSize}, #{pageSize}
+    </select>
+    <select id="getInsideAttachDataList" resultType="cc.ilooli.mccb.pojo.MccbInsideAttachDataDO">
+        select
+        <include refid="inside_attach_data_column"/>
+        from mccb_attachs_data
+        <where>
+            <if test="model != null and model != ''">and model = #{model}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="note != null and note != ''">and note = #{note}</if>
+            <if test="creatorId != null and creatorId != ''">and creator_id = #{creatorId}</if>
+            <if test="modifierId != null and modifierId != ''">and modifier_id = #{modifierId}</if>
+        </where>
+        limit ${currentPage * pageSize}, #{pageSize}
+    </select>
+    <select id="getInsideAttachCodeList" resultType="cc.ilooli.mccb.pojo.MccbInsideAttachCodeDO">
+        select
+        <include refid="inside_attach_code_column"/>
+        from mccb_attachs_code
+        <where>
+            <if test="model != null and model != ''">and model = #{model}</if>
+            <if test="code != null and code != ''">and code = #{code}</if>
+            <if test="attachs != null and attachs != ''">and attachs = #{attachs}</if>
+            <if test="creatorId != null and creatorId != ''">and creator_id = #{creatorId}</if>
+            <if test="modifierId != null and modifierId != ''">and modifier_id = #{modifierId}</if>
+        </where>
+        limit ${currentPage * pageSize}, #{pageSize}
+    </select>
+</mapper>
