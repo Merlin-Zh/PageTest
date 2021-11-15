@@ -23,14 +23,13 @@ public interface CommonProductMapper {
     ProductDO getByCode(String code);
 
     /**
+     * 得到的信息
      * 通过属性获取
      *
-     * @param model   型号
-     * @param current 额定电流
-     * @param note    备注
+     * @param query 查询
      * @return {@link ProductDO}
      */
-    ProductDO getByInfo(String model, String current, String note);
+    List<ProductDO> getByInfo(ProductQuery query);
 
     /**
      * 通过分页查询的方式获取产品列表

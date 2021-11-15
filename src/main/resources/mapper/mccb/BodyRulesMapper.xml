@@ -6,24 +6,58 @@
         id, series, inm, icu, poles, trip, use, alarm, special_use, to_inm, to_icu, to_poles,to_trip, to_use,
         to_alarm, to_special_use, priority, rule, creator_id, create_time, modifier_id, modified_time
     </sql>
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into mccb_body_rules
+        values (null, #{series}, #{inm}, #{icu}, #{poles}, #{trip}, #{use}, #{alarm}, #{specialUse}, #{toInm},
+                #{toIcu}, #{toPoles}, #{toTrip}, #{toUse}, #{toAlarm}, #{toSpecialUse}, #{priority}, #{rule},
+                #{creatorId}, #{createTime}, #{modifierId}, #{modifiedTime})
+    </insert>
+    <update id="update">
+        update mccb_body_rules
+        set inm            = #{inm},
+            icu            = #{icu},
+            poles          = #{poles},
+            trip           = #{trip},
+            use            = #{use},
+            alarm          = #{alarm},
+            special_use    = #{specialUse},
+            to_inm         = #{toInm},
+            to_icu         = #{toIcu},
+            to_poles       = #{toPoles},
+            to_trip        = #{toTrip},
+            to_use         = #{toUse},
+            to_alarm       = #{toAlarm},
+            to_special_use = #{toSpecialUse},
+            priority       = #{priority},
+            rule           = #{rule},
+            modifier_id    = #{modifierId},
+            modified_time  = #{modifiedTime}
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete
+        from mccb_body_rules
+        where id = #{id}
+    </delete>
 
-    <select id="getRulesByDO" resultType="cc.ilooli.mccb.pojo.MccbBodyRulesDO">
+    <select id="getByQuery" resultType="cc.ilooli.mccb.pojo.MccbBodyRulesDO">
         select
         <include refid="base_columns"/>
         from mccb_body_rules
         <where>
             <if test="series != null and series != ''">and series = #{series}</if>
             <if test="inm != null and inm != ''">and inm = #{inm}</if>
-<!--            <if test="!icu.isBlank()">and icu = #{icu}</if>-->
-<!--            <if test="!poles.isBlank()">and poles = #{poles}</if>-->
-<!--            <if test="!trip.isBlank()">and trip = #{trip}</if>-->
-<!--            <if test="!use.isBlank()">and icu = #{use}</if>-->
-<!--            <if test="!specialUse.isBlank()">and special_use = #{specialUse}</if>-->
-<!--            <if test="!priority.isBlank()">and priority = #{priority}</if>-->
-<!--            <if test="!rule.isBlank()">and rule = #{rule}</if>-->
-<!--            <if test="!creatorId.isBlank()">and creator_id = #{creatorId}</if>-->
-<!--            <if test="!modifierId.isBlank()">and modifier_id = #{modifierId}</if>-->
+            <if test="icu != null and icu != ''">and icu = #{icu}</if>
+            <if test="poles != null and poles != ''">and poles = #{poles}</if>
+            <if test="trip != null and trip != ''">and trip = #{trip}</if>
+            <if test="use != null and use != ''">and icu = #{use}</if>
+            <if test="specialUse != null and spedialUse != ''">and special_use = #{specialUse}</if>
+            <if test="priority != null and priority != ''">and priority = #{priority}</if>
+            <if test="rule != null and rule != ''">and rule = #{rule}</if>
+            <if test="creatorId != null and creatorId!=''">and creator_id = #{creatorId}</if>
+            <if test="modifierId != null">and modifier_id = #{modifierId}</if>
         </where>
-        limit ${currentPage * pageSize}, #{pageSize}
+        limit ${(currentPage -1) * pageSize}, #{pageSize}
+        order by priority
     </select>
 </mapper>

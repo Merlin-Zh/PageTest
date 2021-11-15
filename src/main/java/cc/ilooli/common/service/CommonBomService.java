@@ -15,4 +15,5 @@ public interface CommonBomService {
      * @param productDTO 产品dto
      */
     void addBom(ProductDTO productDTO);
+
 }

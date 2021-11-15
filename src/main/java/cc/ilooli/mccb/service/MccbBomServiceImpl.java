@@ -6,6 +6,7 @@ import cc.ilooli.common.service.CommonBomService;
 import cc.ilooli.mccb.mapper.MccbAttachMapper;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,20 +15,27 @@ import org.springframework.stereotype.Service;
  * @author OVO
  * @date 2021/11/12
  */
-@Service
+@Service("MccbBomServiceImpl")
 public class MccbBomServiceImpl implements CommonBomService {
 
     private static final Log logger = LogFactory.get();
     private final CommonProductMapper commonProductMapper;
-//    private final MccbAttachMapper attachMapper;
+    private final MccbAttachMapper attachMapper;
+    private final MccbProductProcesser processer;
+    private ProductDTO product;
 
-    public MccbBomServiceImpl(CommonProductMapper commonProductMapper) {
+    public MccbBomServiceImpl(CommonProductMapper commonProductMapper,
+                              MccbAttachMapper attachMapper, MccbProductProcesser processer) {
         this.commonProductMapper = commonProductMapper;
-//        this.attachMapper = attachMapper;
+        this.attachMapper = attachMapper;
+        this.processer = processer;
     }
 
     @Override
     public void addBom(ProductDTO productDTO) {
+        // process productDTO to acquire product's field and info map
+        this.product = this.processer.getProcessedProduct(productDTO);
+
         this.getBodyBom();
         this.getInsideAttachBom();
         this.getOutsideAttachBom();

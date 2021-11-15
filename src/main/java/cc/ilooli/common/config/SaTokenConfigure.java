@@ -21,6 +21,6 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**");
-        WebMvcConfigurer.super.addInterceptors(registry);
+//        WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

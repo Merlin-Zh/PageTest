@@ -77,7 +77,9 @@
         where id = #{id}
     </delete>
     <delete id="deleteInsideAttachCode">
-        delete from mccb_attachs_code where id = #{id}
+        delete
+        from mccb_attachs_code
+        where id = #{id}
     </delete>
     <select id="getByInfo" resultType="java.lang.String">
         select attachs
@@ -117,10 +119,10 @@
         from mccb_outside_attachs a left join user u on a.creator_id = u.id
         <where>
             <if test="model != null and model != ''">and a.model = #{model}</if>
-            <if test="name != null and name != ''">and a.name = #{name}</if>
+            <if test="name != null and name != ''">and a.attach_name = #{name}</if>
             <if test="note != null and note != ''">and a.note = #{note}</if>
-            <if test="creator != null and creator != ''">and b.name = #{creator}</if>
-            <if test="modifier != null and modifier != ''">and b.name = #{modifier}</if>
+            <if test="creator != null and creator != ''">and u.name = #{creator}</if>
+            <if test="modifier != null and modifier != ''">and u.name = #{modifier}</if>
         </where>
         limit ${currentPage * pageSize}, #{pageSize}
     </select>

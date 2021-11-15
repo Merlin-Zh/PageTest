@@ -2,6 +2,7 @@ package cc.ilooli.common.service;
 
 import cc.ilooli.common.pojo.BomDTO;
 import cc.ilooli.common.pojo.ProductDTO;
+import cc.ilooli.common.pojo.ProductQuery;
 
 import java.util.List;
 
@@ -23,10 +24,10 @@ public interface CommonProductService {
     /**
      * 获取产品信息
      *
-     * @param productDTO 产品dto
+     * @param query 查询
      * @return {@link ProductDTO}
      */
-    ProductDTO getProductByInfo(ProductDTO productDTO);
+    ProductDTO getProductByInfo(ProductQuery query);
 
     /**
      * 获取产品物料清单
